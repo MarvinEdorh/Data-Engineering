@@ -44,7 +44,7 @@ df.iloc[:,2:4] #renvoie toutes les lignes et les colonnes 2 à 4 exclue.
 
 df.iloc[1,2] #renvoie la valeur à la ligne 2 et la colonne 3.
 
-df.iat[1,2] #renvoie la valeur à la ligne 2 et la colonne 3, mais c'est la façon recommandée d'accéder aux valeurs.
+df.iat[1,2] #renvoie la valeur à la ligne 2 et la colonne 3.
 
 df.iat[1, 2] = 7 # on peut aussi faire une affectation pour changer la valeur 
 
@@ -119,7 +119,7 @@ df.drop_duplicates(subset = ['A', 'B'], keep = 'last')
 df.T #renvoie le dataframe transposé.
 
 df.sort_index(axis = 0, ascending = False) 
-#renvoie un dataframe avec les lignes triées par ordre décroissant des labels (le défaut est ascendant)
+# dataframe df avec les lignes triées par ordre décroissant des labels (le défaut est ascendant)
 
 df.info() #imprime des infos sur le dataframe : les noms et types des colonnes, 
 #le nombre de valeurs non nulles et la place occupée.
@@ -145,10 +145,10 @@ df.describe() #renvoie un dataframe donnant des statistiques sur
 #les valeurs (nombres de valeurs, moyenne, écart-type, ...), 
 #mais uniquement sur les colonnes numériques (faire df.describe(include = 'all')
 
-########################################### Connexion au répertoire local
+##################################################### Connexion au répertoire local
 import os; os.chdir('C:/Users/marvin/Desktop/Python') 
 
-############################################ Importation defichier CSV local
+################################################### Importation defichier CSV local
 
 data = pd.read_csv('df1.csv', sep=";")
 
@@ -158,10 +158,9 @@ data_3 = pd.read_csv('df1_bis.csv', sep=";")
 
 data_4 = pd.read_csv('df2_bis.csv', sep=";")
 
-########################################## Concatenation de DataFrame
-pd.concat([data, data_2]) 
+pd.concat([data, data_2]) ############################## Concatenation de DataFrame
 
-########################################## Jointure de DataFrame
+############################################################# Jointure de DataFrame
 data_5=pd.merge(data, data_2, on = ['ID']) 
 # merge = inner join par défaut, on est facultatif si variable commune aux 2 tables
 print(data_5)
