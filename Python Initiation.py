@@ -188,7 +188,7 @@ data_10 = pd.DataFrame({'ID': ['ID1','ID2','ID3','ID4','ID5'], 'A': [1,-2,-32,10
 data_10_bis = data_10[['A','B','D']] # créer le Dataframe avec le nom des colonnes méthode 1
 data_10_bis = pd.DataFrame(np.c_[data_10['A'],data_10['B'],data_10['D']],columns =['A','B','D']) #méthode 2
 
-######################### créer le Dataframe avec les numéro de colonne en rajoutant les index
+######################### Créer le DataFrame avec les numéro de colonne en rajoutant les index
 col = list(data_10.columns)              
 del col[0]; del col[2]  
 data_10_bis_index = pd.DataFrame(np.c_[data_10.iloc[:,1:3],data_10.iloc[:,[4]]], columns = col, index = data_10['ID'])   
