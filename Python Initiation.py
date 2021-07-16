@@ -200,4 +200,5 @@ data_10_bis_index['A_bis'] = np.where(data_10_bis_index['A']>0,1,0) #A_bis = 1 s
 data_10_bis_index['A_bis'] =  data_10_bis_index.A_bis.replace({1:"oui",0:"non"}) #recoder la variable A_bis 
 
 ########################################## Export de DataFrame en local
+
 data_10_bis_index.to_csv('C:/Users/marvi/Desktop/MsMDA/AutoFormation/export_data_9.csv')
