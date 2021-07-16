@@ -1,4 +1,4 @@
-###################################### Initiation Python pour Gestion de base de données ###########################################
+###################################### Initiation Python pour Gestion de Bases de données ###########################################
 
 
 ########################################### Création de DataFrame par ligne
