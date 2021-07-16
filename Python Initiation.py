@@ -1,17 +1,19 @@
-###################################### Initiation Python pour Gestion de Bases de Données ###########################################
+############################ Initiation Python pour Gestion de Bases de Données #########################################
 
 
-########################################### Création de DataFrame par ligne
+########################### Création de DataFrame par ligne 
 import numpy as np ; import pandas as pd
 ar = np.array([[1.1, 2, 3.3, 4], [2.7, 10, 5.4, 7], [5.3, 9, 1.5, 15]]) #lignes
 df = pd.DataFrame(ar, index = ['a1', 'a2', 'a3'], columns = ['A', 'B', 'C', 'D']) #index
 print(df) 
 
-############################################ Création de DataFrame par colonne
-df_2 = pd.DataFrame({'A': [1.1, 2.7, 5.3], 'B': [2, 10, 9], 'C': [3.3, 5.4, 1.5], 'D': [4, 7, 15]}, index = ['a1', 'a2', 'a3'])
+########################### Création de DataFrame par colonne
+df_2 = pd.DataFrame({'A': [1.1, 2.7, 5.3], 'B': [2, 10, 9],
+                     'C': [3.3, 5.4, 1.5], 'D': [4, 7, 15]}, index = ['a1', 'a2', 'a3'])
 print(df_2) 
 
-df_3 = pd.DataFrame({'col1': pd.Series([2, 3, 4], index = ['a', 'b', 'c']), 'col2': pd.Series([6, 7, 8], index = ['b', 'a', 'd'])})
+df_3 = pd.DataFrame({'col1': pd.Series([2, 3, 4], index = ['a', 'b', 'c']), 
+                     'col2': pd.Series([6, 7, 8], index = ['b', 'a', 'd'])})
 print(df_3) 
 
 df['A'] #afficher colonne A du DataFrame 'df'
@@ -178,20 +180,21 @@ data_9 = pd.merge(data, data_4, how = 'right') # right join
 
 print(data_9)
 
-########################################## Creation d'un DataFrame à partir d'un autre DataFrame
+#################################### Creation d'un DataFrame à partir d'un autre DataFrame
 
 data_10 = pd.DataFrame({'ID': ['ID1','ID2','ID3','ID4','ID5'], 'A': [1,-2,-32,10,0], 
-                        'B': [3.3,-5.4, 1.5, 8.4, -45.9], 'C': [4, -7, 15, 609, 12], 'D': [1056, -207, 6715, -49, 31]})
+                        'B': [3.3,-5.4, 1.5, 8.4, -45.9], 'C': [4, -7, 15, 609, 12], 
+                        'D': [1056, -207, 6715, -49, 31]})
 
 data_10_bis = data_10[['A','B','D']] # créer le Dataframe avec le nom des colonnes méthode 1
 data_10_bis = pd.DataFrame(np.c_[data_10['A'],data_10['B'],data_10['D']],columns =['A','B','D']) #méthode 2
 
-# créer le Dataframe avec les numéro de colonne en rajoutant les index
+######################### créer le Dataframe avec les numéro de colonne en rajoutant les index
 col = list(data_10.columns)              
 del col[0]; del col[2]  
 data_10_bis_index = pd.DataFrame(np.c_[data_10.iloc[:,1:3],data_10.iloc[:,[4]]], columns = col, index = data_10['ID'])   
 
-##########################################      Traitement de variables
+########################################## Traitement de variables
 
 data_10_bis_index['A_bis'] = np.where(data_10_bis_index['A']>0,1,0) #A_bis = 1 si A > 0 sinon A_bis = 0
 
