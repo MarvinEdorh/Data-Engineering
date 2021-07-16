@@ -144,7 +144,7 @@ df.describe() #renvoie un dataframe donnant des statistiques sur
 #mais uniquement sur les colonnes numériques (faire df.describe(include = 'all')
 
 ########################################### Connexion au répertoire local
-import os; os.chdir('C:/Users/marvi/Desktop/MsMDA/AutoFormation/Python') 
+import os; os.chdir('C:/Users/marvin/Desktop/Python') 
 
 ############################################ Importation defichier CSV local
 
