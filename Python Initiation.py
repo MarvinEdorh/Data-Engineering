@@ -108,7 +108,7 @@ df.drop_duplicates()
 #renvoie un dataframe avec les lignes redondantes enlevées 
 #en n'en conservant qu'une seule (ici 3 lignes restant)
 df.drop_duplicates(keep = False) 
-#renvoie un dataframe avec les lignes redondantes toutes enlevées (ici 2 lignes restant)
+#renvoie un dataframe avec les lignes redondantes toutes enlevées
 df.drop_duplicates(inplace = True) # fait la modification en place.
 df.drop_duplicates(subset = ['A', 'B']) 
 #renvoie un dataframe avec les doublons enlevés en considérant seulement les colonnes A et B, 
