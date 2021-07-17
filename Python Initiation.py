@@ -201,4 +201,4 @@ data_10_bis_index['A_bis'] =  data_10_bis_index.A_bis.replace({1:"oui",0:"non"})
 
 ########################################## Export de DataFrame en local
 
-data_10_bis_index.to_csv('C:/Users/marvin/Desktop/data_10_bis_index.csv')
+data_10_bis_index.to_csv('C:/Users/marvin/Desktop/Python/data_10_bis_index.csv')
