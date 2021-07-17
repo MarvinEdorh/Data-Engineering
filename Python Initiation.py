@@ -150,13 +150,13 @@ import os; os.chdir('C:/Users/marvin/Desktop/Python')
 
 ################################################### Importation defichier CSV local
 
-data = pd.read_csv('df1.csv', sep=";")
+data = pd.read_csv('df1.csv', sep=",")
 
-data_2 = pd.read_csv('df2.csv', sep=";")
+data_2 = pd.read_csv('df2.csv', sep=",")
 
-data_3 = pd.read_csv('df1_bis.csv', sep=";")
+data_3 = pd.read_csv('df1_bis.csv', sep=",")
 
-data_4 = pd.read_csv('df2_bis.csv', sep=";")
+data_4 = pd.read_csv('df2_bis.csv', sep=",")
 
 pd.concat([data, data_2]) ############################## Concatenation de DataFrame
 
