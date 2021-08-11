@@ -25,6 +25,4 @@ BigQuery_table = { 'ID_Visitor' : ID_Visitor, 'Visits' : Visits } ; BigQuery_tab
 
 from pandas.io import gbq
 
-BigQuery_table.to_gbq(destination_table='test.BigQuery_table',
-                      project_id='mrvtestproject45',
-                      if_exists='replace')
+BigQuery_table.to_gbq(destination_table='test.BigQuery_table', project_id='mrvtestproject45', if_exists='replace')
