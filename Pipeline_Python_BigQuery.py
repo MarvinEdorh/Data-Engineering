@@ -30,7 +30,7 @@ for row in query_results:
 BigQuery_table = { 'ID_Visitor' : ID_Visitor, 'Visits' : Visits } ; BigQuery_table = pd.DataFrame(BigQuery_table)
 
 #Cette table va pouvoir etre soumise à des tests statistiques ou des modèles de machine learning 
-#afin d'effectuer par exemple de l'A/B testing ou des analyses predictives (conf Data-Mining/Machine Learning)
+#afin d'effectuer par exemple de l'A/B testing ou des analyses predictives (conf repositories Data-Mining & Machine Learning)
 
 #Après analyses, export des résultats vers Google Cloud Platform BigQuery Storage 
 #afin de mieux les visualiser sur des outils BI de Data Visualisation comme Tableau ou Data Studio
