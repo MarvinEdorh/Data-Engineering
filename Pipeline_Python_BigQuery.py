@@ -1,4 +1,4 @@
-################################ Data Pipeline Python to Google Cloud Platform BigQuery ###################################
+############################### Data Pipeline Python to Google Cloud Platform BigQuery ##################################
 
 import os; os.chdir('C:/Users/marvin/Desktop/SQL BigQuery')
 
