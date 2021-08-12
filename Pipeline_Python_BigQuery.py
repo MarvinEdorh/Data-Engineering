@@ -1,5 +1,8 @@
 ############################### Data Pipeline Google Cloud Platform BigQuery to Python ##################################
 
+#Process de connexion des données Google Analytics stoquées dans BigQuery avec une interface Python 
+#afin de soulettre ces données requêtées à 
+
 import os; os.chdir('C:/Users/marvin/Desktop/SQL BigQuery')
 
 import numpy as np ; import pandas as pd ; from google.cloud import bigquery
