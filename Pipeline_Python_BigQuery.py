@@ -39,4 +39,4 @@ BigQuery_table = { 'ID_Visitor' : ID_Visitor, 'Visits' : Visits } ; BigQuery_tab
 #afin de mieux les visualiser sur des outils BI de Data Visualisation comme Tableau ou Data Studio
 from pandas.io import gbq
 BigQuery_table.to_gbq(destination_table='test.BigQuery_table', project_id='data_pipeline', if_exists='replace')
-#copier coller le code d´autorisation dans la console
+#copier coller le code d'autorisation dans la console
