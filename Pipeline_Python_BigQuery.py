@@ -1,4 +1,4 @@
-################################## Data Pipeline Google Cloud Platform to Python #######################################
+################################## Data Pipeline Google Cloud Platform to Python ####################################### 
 
 #Process de connexion des données Google Analytics stoquées dans GCP BigQuery Storage avec une interface Python 
 #afin de soulettre ces données requêtées à des méthodes d'analyses exploratoires non réalisables en langage SQL
