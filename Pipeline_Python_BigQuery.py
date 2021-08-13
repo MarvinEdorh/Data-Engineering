@@ -11,7 +11,7 @@ import numpy as np ; import pandas as pd ; from google.cloud import bigquery
 #Authentification du compte dans Python en ajouant lien du fichier JSON téléchargé en local après la creation de la clé
 
 client = bigquery.Client.from_service_account_json(
-json_credentials_path='C:/Users/marvin/Desktop/SQL BigQuery/data_pipeline-bbc9aec8eae9.json', 
+json_credentials_path='data_pipeline-bbc9aec8eae9.json', 
 project='data_pipeline')
 
 #Requête SQL
