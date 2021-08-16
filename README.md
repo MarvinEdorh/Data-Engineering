@@ -1,3 +1,3 @@
 # Data-Pipeline Python/BigQuery
-Demo ETL GCP & Python : https://github.com/MarvinEdorh/Data-Engineering/blob/master/Pipeline_Python_BigQuery.py
+Demo ETL GCP/Python : https://github.com/MarvinEdorh/Data-Engineering/blob/master/Pipeline_Python_BigQuery.py
 
