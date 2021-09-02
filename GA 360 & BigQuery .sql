@@ -14,14 +14,14 @@ WHERE _TABLE_SUFFIX = '20161202'
 GROUP BY fullvisitorid
 ORDER BY fullvisitorid
 
-##################################################### selection ##########################################################
+##################################################### selection ########################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory, 10 AS dix,
 CASE WHEN device.deviceCategory = "desktop" THEN 1 
      WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
-##################################################### conditions ########################################################
+##################################################### conditions #######################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
