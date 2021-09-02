@@ -189,8 +189,8 @@ RTRIM(RPAD(device.deviceCategory,10,"0"),"0"), supprimer la chaine de caratères
 TRIM(device.deviceCategory,"e"), supprimer la chaine de caratères "..."
 REPLACE(device.deviceCategory,"1","2"), #remplacer 1 par 2
 REVERSE(device.deviceCategory), #inverser la chaine de caractère
-SUBSTR(device.deviceCategory,1, 2), 2 caratères depuis la position 1
-SUBSTR(device.deviceCategory,3), tous les caracteres depuis la position 3
+SUBSTR(device.deviceCategory,1, 2), #2 caratères depuis la position 1
+SUBSTR(device.deviceCategory,3), #tous les caracteres depuis la position 3
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
 ####################################################### date ############################################################
@@ -200,7 +200,7 @@ SELECT
 CURRENT_DATE(), #2021-09-02
 CURRENT_TIME(), #09:04:47.005603
 CURRENT_TIMESTAMP(), #2021-09-02 09:04:47.005603 UTC
-EXTRACT(DAYOFWEEK FROM CURRENT_DATE()), # renvoie des valeurs comprises dans la plage [1,7], le dimanche étant considéré comme le premier jour de la semaine.
+EXTRACT(DAYOFWEEK FROM CURRENT_DATE()), #renvoie des valeurs comprises dans la plage [1,7], le dimanche étant considéré comme le premier jour de la semaine.
 EXTRACT(DAY FROM CURRENT_DATE()), #numéro de semaine de la date (compris dans la plage [0, 53]). Les semaines commencent le dimanche et les dates antérieures au premier dimanche de l'année correspondent à la semaine 0.
 EXTRACT(DAYOFYEAR FROM CURRENT_DATE()), # renvoie le numéro de semaine de la date (compris dans la plage [0, 53]). 
 #Les semaines commencent le jour spécifié par WEEKDAY. Les dates antérieures au premier jour WEEKDAY de l'année correspondent à la semaine 0. 
