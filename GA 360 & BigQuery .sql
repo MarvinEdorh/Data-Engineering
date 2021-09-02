@@ -14,14 +14,14 @@ WHERE _TABLE_SUFFIX = '20161202'
 GROUP BY fullvisitorid
 ORDER BY fullvisitorid
 
-##################################################### selection ###########################################################
+##################################################### selection ##########################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory, 10 AS dix,
 CASE WHEN device.deviceCategory = "desktop" THEN 1 
      WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
-##################################################### conditions #########################################################
+##################################################### conditions ########################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
@@ -74,7 +74,7 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga,
 UNNEST(ga.hits) AS hits 
 WHERE hits.transaction.transactionId IS NOT NULL #est non vide
 
-###################################################### aggregation #######################################################
+###################################################### aggregation ######################################################
 
 SELECT fullvisitorid, 
 SUM(totals.visits) #somme
@@ -85,7 +85,7 @@ MAX(date), #maximum
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
 GROUP BY fullvisitorid
 
-###################################################### filtre ###########################################################
+###################################################### filtre ##########################################################
 
 SELECT fullvisitorid, SUM(totals.visits) AS visits
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
@@ -93,7 +93,7 @@ GROUP BY fullvisitorid
 HAVING SUM(totals.visits) >= 2
 ORDER BY visits DESC
 
-##################################################### concatenation ####################################################
+##################################################### concatenation ###################################################
 
 SELECT DISTINCT fullvisitorid, 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
@@ -347,7 +347,7 @@ TIMESTAMP_MICROS(1230219000000000),
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits limit 1
 
-###################################################### ARRAY ############################################################
+###################################################### ARRAY ###########################################################
 
 SELECT fullvisitorid,ARRAY_AGG(DISTINCT hp.v2ProductName) 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
