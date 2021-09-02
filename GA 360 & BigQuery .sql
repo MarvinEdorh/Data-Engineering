@@ -80,7 +80,7 @@ GROUP BY fullvisitorid
 HAVING SUM(totals.visits) >= 2
 ORDER BY visits DESC
 
-###################################################### ARRAY & UNNEST ###################################################
+################################################### ARRAY & UNNEST #####################################################
 
 SELECT fullvisitorid,ARRAY_AGG(DISTINCT hp.v2ProductName) 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
