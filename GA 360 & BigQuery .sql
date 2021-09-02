@@ -1,4 +1,4 @@
-############################################ Google Analytics & SQL BigQuery #############################################
+########################################### Google Analytics & SQL BigQuery ##############################################
 
 ###################################################### syntaxe ###########################################################
 
@@ -14,14 +14,14 @@ WHERE _TABLE_SUFFIX = '20161202'
 GROUP BY fullvisitorid
 ORDER BY fullvisitorid
 
-########################################### selection ########################################
+##################################################### selection ############################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory, 10 AS dix,
 CASE WHEN device.deviceCategory = "desktop" THEN 1 
      WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
-##################################### conditions ###############################################
+##################################################### conditions ##########################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
@@ -74,7 +74,7 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga,
 UNNEST(ga.hits) AS hits 
 WHERE hits.transaction.transactionId IS NOT NULL #est non vide
 
-################################# aggregation ############################################
+##################################################### aggregation #########################################################
 
 SELECT fullvisitorid, 
 SUM(totals.visits) #somme
@@ -85,7 +85,7 @@ MAX(date), #maximum
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
 GROUP BY fullvisitorid
 
-###################################### filtre ################################################
+##################################################### filtre #############################################################
 
 SELECT fullvisitorid, SUM(totals.visits) AS visits
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
@@ -93,7 +93,7 @@ GROUP BY fullvisitorid
 HAVING SUM(totals.visits) >= 2
 ORDER BY visits DESC
 
-############################################ concatenation #######################################
+##################################################### concatenation #####################################################
 
 SELECT DISTINCT fullvisitorid, 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
@@ -113,7 +113,7 @@ EXCEPT DISTINCT #soustraction
 SELECT DISTINCT fullvisitorid, 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225` 
 
-######################################## jointure ############################################
+##################################################### jointure ########################################################
 
 WITH visits AS (
 SELECT fullvisitorid, SUM(totals.visits) AS visits
@@ -174,7 +174,7 @@ products AS (SELECT DISTINCT hp.v2ProductName AS product FROM `bigquery-public-d
 
 SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, products #developpement factoriel
 
-######################################## chaine de caractère ######################################
+##################################################### chaine de caractère ##################################################
 
 SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
 LENGTH(device.deviceCategory), #nombre de caractère
@@ -193,6 +193,9 @@ SUBSTR(device.deviceCategory,1, 2), 2 caratères depuis la position 1
 SUBSTR(device.deviceCategory,3), tous les caracteres depuis la position 3
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
+##################################################### date ###############################################################
+
+#DATE
 SELECT 
 CURRENT_DATE(), #2021-09-02
 CURRENT_TIME(), #09:04:47.005603
@@ -241,6 +244,7 @@ LAST_DAY(CURRENT_DATE(), ISOYEAR) AS last_day,
 PARSE_DATE("%Y%m%d", date)
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`limit 1
 
+#DATETIME
 SELECT 
 CURRENT_DATETIME(),
 DATETIME(EXTRACT(YEAR FROM PARSE_DATE("%Y%m%d", date)), EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", date)),
@@ -297,6 +301,7 @@ DATETIME_DIFF(CURRENT_DATETIME(),DATETIME_SUB(CURRENT_DATETIME(), INTERVAL 10 MI
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits limit 1
 
+#TIMESTAMP
 SELECT 
 CURRENT_TIMESTAMP(),
 EXTRACT(MICROSECOND FROM CURRENT_TIMESTAMP()),
@@ -342,12 +347,14 @@ TIMESTAMP_MICROS(1230219000000000),
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits limit 1
 
-####################################################################################################################
+#################################################### ARRAY ##########################################################
 
 SELECT fullvisitorid,ARRAY_AGG(DISTINCT hp.v2ProductName) 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp 
 WHERE hits.transaction.transactionId IS NOT NULL GROUP BY fullvisitorid
+
+#################################################### OVER ##########################################################
 
 WITH products AS (
 SELECT fullvisitorid,COUNT(DISTINCT hp.v2ProductName) AS products 
