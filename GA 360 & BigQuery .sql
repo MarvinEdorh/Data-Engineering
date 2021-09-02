@@ -137,7 +137,7 @@ EXCEPT DISTINCT #soustraction
 SELECT DISTINCT fullvisitorid, 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225` 
 
-##################################################### JOIN #########################################################
+###################################################### JOIN #########################################################
 
 WITH visits AS (
 SELECT fullvisitorid, SUM(totals.visits) AS visits
@@ -198,7 +198,7 @@ products AS (SELECT DISTINCT hp.v2ProductName AS product FROM `bigquery-public-d
 
 SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, products #developpement factoriel
 
-################################################# STRING #############################################################
+################################################ STRING ###############################################################
 
 SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
 LENGTH(device.deviceCategory), #nombre de caractère
@@ -217,7 +217,7 @@ SUBSTR(device.deviceCategory,1, 2), #2 caratères depuis la position 1
 SUBSTR(device.deviceCategory,3), #tous les caracteres depuis la position 3
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
-####################################################### DATA & TIME ####################################################
+#################################################### DATA & TIME ######################################################
 
 #DATE
 SELECT 
