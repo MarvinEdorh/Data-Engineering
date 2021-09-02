@@ -174,7 +174,7 @@ products AS (SELECT DISTINCT hp.v2ProductName AS product FROM `bigquery-public-d
 
 SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, products #developpement factoriel
 
-##################################################### chaine de caractère ##################################################
+################################################# chaine de caractère #####################################################
 
 SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
 LENGTH(device.deviceCategory), #nombre de caractère
@@ -193,7 +193,7 @@ SUBSTR(device.deviceCategory,1, 2), 2 caratères depuis la position 1
 SUBSTR(device.deviceCategory,3), tous les caracteres depuis la position 3
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
-##################################################### date ###############################################################
+####################################################### date ###############################################################
 
 #DATE
 SELECT 
@@ -347,14 +347,14 @@ TIMESTAMP_MICROS(1230219000000000),
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits limit 1
 
-#################################################### ARRAY ##########################################################
+###################################################### ARRAY ###########################################################
 
 SELECT fullvisitorid,ARRAY_AGG(DISTINCT hp.v2ProductName) 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
 UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp 
 WHERE hits.transaction.transactionId IS NOT NULL GROUP BY fullvisitorid
 
-#################################################### OVER ##########################################################
+###################################################### OVER ###########################################################
 
 WITH products AS (
 SELECT fullvisitorid,COUNT(DISTINCT hp.v2ProductName) AS products 
