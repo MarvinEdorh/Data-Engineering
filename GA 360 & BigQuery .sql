@@ -179,14 +179,14 @@ SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, 
 SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
 LENGTH(device.deviceCategory), #nombre de caractère
 LEFT(device.deviceCategory,1), #x caratères depuis la gauche
-RIGHT(device.deviceCategory,1), x caratères depuis la droite
-UPPER(device.deviceCategory), majuscule
-LOWER(UPPER(device.deviceCategory)), minuscule
-LPAD(device.deviceCategory,10,"0"), ajoute x caratères depuis la gauche jusqu'à qu'il y en ai 10
-RPAD(device.deviceCategory,10,"0"), ajoute x caratères depuis la droite jusqu'à qu'il y en ai 10
-LTRIM(LPAD(device.deviceCategory,10,"0"),"0"), supprimer la chaine de caratères "..." depuis la gauche 
-RTRIM(RPAD(device.deviceCategory,10,"0"),"0"), supprimer la chaine de caratères "..." depuis la droite
-TRIM(device.deviceCategory,"e"), supprimer la chaine de caratères "..."
+RIGHT(device.deviceCategory,1), #x caratères depuis la droite
+UPPER(device.deviceCategory), #majuscule
+LOWER(UPPER(device.deviceCategory)), #minuscule
+LPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la gauche jusqu'à qu'il y en ai 10
+RPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la droite jusqu'à qu'il y en ai 10
+LTRIM(LPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la gauche 
+RTRIM(RPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la droite
+TRIM(device.deviceCategory,"e"), #supprimer la chaine de caratères "..."
 REPLACE(device.deviceCategory,"1","2"), #remplacer 1 par 2
 REVERSE(device.deviceCategory), #inverser la chaine de caractère
 SUBSTR(device.deviceCategory,1, 2), #2 caratères depuis la position 1
