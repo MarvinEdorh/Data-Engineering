@@ -198,7 +198,7 @@ products AS (SELECT DISTINCT hp.v2ProductName AS product FROM `bigquery-public-d
 
 SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, products #developpement factoriel
 
-################################################ STRING ###############################################################
+#################################################### STRING ############################################################
 
 SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
 LENGTH(device.deviceCategory), #nombre de caractère
