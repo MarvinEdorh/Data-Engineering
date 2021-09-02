@@ -197,19 +197,17 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
 #DATE
 SELECT 
-CURRENT_DATE(), #2021-09-02
-CURRENT_TIME(), #09:04:47.005603
-CURRENT_TIMESTAMP(), #2021-09-02 09:04:47.005603 UTC
-EXTRACT(DAYOFWEEK FROM CURRENT_DATE()), #renvoie des valeurs comprises dans la plage [1,7], le dimanche étant considéré comme le premier jour de la semaine.
-EXTRACT(DAY FROM CURRENT_DATE()), #numéro de semaine de la date (compris dans la plage [0, 53]). Les semaines commencent le dimanche et les dates antérieures au premier dimanche de l'année correspondent à la semaine 0.
-EXTRACT(DAYOFYEAR FROM CURRENT_DATE()), # renvoie le numéro de semaine de la date (compris dans la plage [0, 53]). 
-#Les semaines commencent le jour spécifié par WEEKDAY. Les dates antérieures au premier jour WEEKDAY de l'année correspondent à la semaine 0. 
-#Les valeurs valides pour WEEKDAY sont SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY et SATURDAY
-EXTRACT(WEEK  FROM CURRENT_DATE()), # renvoie le numéro de semaine de la date (compris dans la plage [0, 53]). Les semaines commencent le dimanche et les dates antérieures au premier dimanche de l'année correspondent à la semaine 0.
-EXTRACT(WEEK(FRIDAY) FROM CURRENT_DATE()),#renvoie le numéro de semaine de la date (compris dans la plage [0, 53]). Les semaines commencent le jour spécifié par WEEKDAY. Les dates antérieures au premier jour WEEKDAY de l'année correspondent à la semaine 0. Les valeurs valides pour WEEKDAY sont SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY et SATURDAY
-EXTRACT(ISOWEEK FROM CURRENT_DATE()), #renvoie le numéro de semaine ISO 8601 de date_expression. Les ISOWEEK commencent le lundi. Les valeurs renvoyées sont comprises dans la plage [1, 53]. La première ISOWEEK de chaque année ISO commence le lundi précédant le premier jeudi de l'année civile grégorienne.
+CURRENT_DATE(), CURRENT_TIME(), #2021-09-02, 09:04:47.005603 
+EXTRACT(DAYOFWEEK FROM CURRENT_DATE()), #[0,7] le dimanche étant considéré comme le premier jour de la semaine
+EXTRACT(DAY FROM CURRENT_DATE()),
+EXTRACT(DAYOFYEAR FROM CURRENT_DATE()),
+EXTRACT(WEEK  FROM CURRENT_DATE()), 
+#[0,53] commencent le dimanche et les dates antérieures au premier dimanche de l'année correspondent à la semaine 0
+EXTRACT(WEEK(MONDAY) FROM CURRENT_DATE()),#[0, 53] commencent le jour spécifié par WEEKDAY (SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY)
+EXTRACT(ISOWEEK FROM CURRENT_DATE()), #[1, 53] commencent le lundi, la première ISOWEEK de chaque année ISO 
+                                      #commence le lundi précédant le premier jeudi de l'année civile grégorienne
 EXTRACT(MONTH FROM CURRENT_DATE()),
-EXTRACT(QUARTER FROM CURRENT_DATE()), #renvoie des valeurs comprises dans la plage [1,4].
+EXTRACT(QUARTER FROM CURRENT_DATE()), #[1,4]
 EXTRACT(YEAR FROM CURRENT_DATE()),
 EXTRACT(ISOYEAR FROM CURRENT_DATE()), #renvoie l'année à numérotation de semaine conforme à l'ISO 8601, qui correspond à l'année grégorienne contenant le jeudi de la semaine à laquelle date_expression appartient.
 DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY),
