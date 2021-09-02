@@ -112,7 +112,7 @@ ROW_NUMBER() OVER(PARTITION BY v2ProductName),
 RANK() OVER(PARTITION BY v2ProductName ORDER BY visits DESC)
 FROM products ORDER BY v2ProductName, visits DESC 
 
-##################################################### UNION #######################################################
+##################################################### UNION #########################################################
 
 #fusion
 SELECT DISTINCT fullvisitorid, 
@@ -135,7 +135,7 @@ EXCEPT DISTINCT
 SELECT DISTINCT fullvisitorid, 
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225` 
 
-###################################################### JOIN #########################################################
+###################################################### JOIN ##########################################################
 
 WITH visits AS (
 SELECT fullvisitorid, SUM(totals.visits) AS visits
