@@ -1,5 +1,8 @@
 ###################################### BigQuery SQL Code & Google Analytics #############################################
 
+#https://support.google.com/analytics/answer/3437719?hl=fr
+#https://support.google.com/analytics/answer/7029846?hl=fr
+
 ##################################################### SELECT ############################################################
 
 SELECT DISTINCT fullvisitorid, device.deviceCategory, 10 AS dix,
