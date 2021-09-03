@@ -261,7 +261,7 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`limit 1
 #TIME
 SELECT 
 CURRENT_TIME(), #21:53:41.384727 
-TIME(hits.hour, hits.minute,00),
+TIME(hits.hour, hits.minute, 00),
 EXTRACT(MICROSECOND FROM CURRENT_TIME()),
 EXTRACT(MILLISECOND FROM CURRENT_TIME()),
 EXTRACT(SECOND FROM CURRENT_TIME()),
@@ -290,7 +290,7 @@ CURRENT_DATETIME(), #2021-09-02T21:53:41.384727
 DATETIME(EXTRACT(YEAR FROM PARSE_DATE("%Y%m%d", date)), 
          EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d", date)),
          EXTRACT(DAY FROM PARSE_DATE("%Y%m%d", date)), 
-         hits.hour, hits.minute,00),
+         hits.hour, hits.minute, 00),
 DATE(CURRENT_DATETIME()), #2021-09-02
 EXTRACT(MICROSECOND FROM CURRENT_DATETIME()),
 EXTRACT(MILLISECOND FROM CURRENT_DATETIME()),
