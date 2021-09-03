@@ -1,7 +1,7 @@
 ###################################### BigQuery SQL Code & Google Analytics #############################################
 
-#https://support.google.com/analytics/answer/3437719?hl=fr
-#https://support.google.com/analytics/answer/7029846?hl=fr
+#Google Analytics 360 : https://support.google.com/analytics/answer/3437719?hl=fr
+#Google Analytics 4 & Firebase : https://support.google.com/analytics/answer/7029846?hl=fr
 
 ##################################################### SELECT ############################################################
 
