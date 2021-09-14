@@ -222,7 +222,7 @@ FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
 #DATE
 SELECT 
-CURRENT_DATE(), CURRENT_TIME(), #2021-09-02, 09:04:47.005603 
+CURRENT_DATE(), #2021-09-02,
 EXTRACT(DAYOFWEEK FROM CURRENT_DATE()), #[0,7] le dimanche étant considéré comme le premier jour de la semaine
 EXTRACT(DAY FROM CURRENT_DATE()),
 EXTRACT(DAYOFYEAR FROM CURRENT_DATE()),
