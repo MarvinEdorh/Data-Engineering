@@ -353,7 +353,8 @@ WITH visits AS (
           SUM(totals.visits) AS visits
      FROM 
           `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-     GROUP BY 1)
+     GROUP BY 1
+)
      
 , transactions AS (
      SELECT 
@@ -362,7 +363,8 @@ WITH visits AS (
      FROM 
           `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
      UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
-     GROUP BY 1)
+     GROUP BY 1
+)
 
 SELECT 
      visits.fullvisitorid, 
@@ -378,7 +380,8 @@ WITH visitors AS (
      SELECT 
           DISTINCT fullvisitorid 
      FROM 
-          `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`)
+          `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
+)
           
 , products AS (
      SELECT 
@@ -398,22 +401,25 @@ CROSS JOIN products #FROM visitors, products #developpement factoriel
 
 ###################################################### STRING ##########################################################
 
-SELECT DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, device.deviceCategory,
-LENGTH(device.deviceCategory), #nombre de caractère
-LEFT(device.deviceCategory,1), #x caratères depuis la gauche
-RIGHT(device.deviceCategory,1), #x caratères depuis la droite
-UPPER(device.deviceCategory), #majuscule
-LOWER(UPPER(device.deviceCategory)), #minuscule
-LPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la gauche jusqu'à qu'il y en ai 10
-RPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la droite jusqu'à qu'il y en ai 10
-LTRIM(LPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la gauche 
-RTRIM(RPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la droite
-TRIM(device.deviceCategory,"e"), #supprimer la chaine de caratères "..."
-REPLACE(device.deviceCategory,"1","2"), #remplacer 1 par 2
-REVERSE(device.deviceCategory), #inverser la chaine de caractère
-SUBSTR(device.deviceCategory,1, 2), #2 caratères depuis la position 1
-SUBSTR(device.deviceCategory,3), #tous les caracteres depuis la position 3
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
+SELECT 
+     DISTINCT CONCAT("ID",fullvisitorid) AS fullvisitorid, 
+     device.deviceCategory,
+     LENGTH(device.deviceCategory), #nombre de caractère
+     LEFT(device.deviceCategory,1), #x caratères depuis la gauche
+     RIGHT(device.deviceCategory,1), #x caratères depuis la droite
+     UPPER(device.deviceCategory), #majuscule
+     LOWER(UPPER(device.deviceCategory)), #minuscule
+     LPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la gauche jusqu'à qu'il y en ai 10
+     RPAD(device.deviceCategory,10,"0"), #ajoute x caratères depuis la droite jusqu'à qu'il y en ai 10
+     LTRIM(LPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la gauche 
+     RTRIM(RPAD(device.deviceCategory,10,"0"),"0"), #supprimer la chaine de caratères "..." depuis la droite
+     TRIM(device.deviceCategory,"e"), #supprimer la chaine de caratères "..."
+     REPLACE(device.deviceCategory,"1","2"), #remplacer 1 par 2
+     REVERSE(device.deviceCategory), #inverser la chaine de caractère
+     SUBSTR(device.deviceCategory,1, 2), #2 caratères depuis la position 1
+     SUBSTR(device.deviceCategory,3), #tous les caracteres depuis la position 3
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`
 
 #################################################### DATA & TIME ######################################################
 
