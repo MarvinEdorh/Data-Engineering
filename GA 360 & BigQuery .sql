@@ -221,86 +221,180 @@ ORDER BY 1, 3 DESC
 ##################################################### UNION ############################################################
 
 #fusion
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161224`
+ 
 UNION ALL 
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225`
+
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161225`
 
 #intersection
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
+
 INTERSECT DISTINCT 
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225`
+
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161225`
 
 #extraction
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161224` 
+
 EXCEPT DISTINCT 
-SELECT DISTINCT fullvisitorid, 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161225` 
+
+SELECT 
+     DISTINCT fullvisitorid, 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161225` 
 
 ###################################################### JOIN #############################################################
 
 WITH visits AS (
-SELECT fullvisitorid, SUM(totals.visits) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-GROUP BY fullvisitorid),
-transactions AS (
-SELECT fullvisitorid, COUNT(DISTINCT hits.transaction.transactionId) AS transactions
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
-UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
-GROUP BY fullvisitorid)
-SELECT visits.fullvisitorid, visits.visits, transactions.transactions  FROM visits
-INNER JOIN  transactions #jointure unique sur les 2 tables
-ON visits.fullvisitorid = transactions.fullvisitorid
+     SELECT 
+          fullvisitorid, 
+          SUM(totals.visits) AS visits
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
+GROUP BY 1
+)
+
+, transactions AS (
+     SELECT 
+          fullvisitorid, 
+          COUNT(DISTINCT hits.transaction.transactionId) AS transactions
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
+          UNNEST(ga.hits) AS hits 
+     WHERE  hits.transaction.transactionId IS NOT NULL
+     GROUP BY 1
+)
+     
+SELECT 
+     visits.fullvisitorid, 
+     visits.visits, transactions.transactions  
+FROM 
+     visits
+INNER JOIN  
+     transactions #jointure unique sur les 2 tables
+     ON visits.fullvisitorid = transactions.fullvisitorid
 
 WITH visits AS (
-SELECT fullvisitorid, SUM(totals.visits) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-GROUP BY fullvisitorid),
-transactions AS (
-SELECT fullvisitorid, COUNT(DISTINCT hits.transaction.transactionId) AS transactions
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
-UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
-GROUP BY fullvisitorid)
-SELECT visits.fullvisitorid, visits.visits, transactions.transactions  FROM visits
-LEFT JOIN  transactions #LEFT OUTER JOIN #jointure la 1ère table
-USING (fullvisitorid)
+     SELECT 
+          fullvisitorid, 
+          SUM(totals.visits) AS visits
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
+     GROUP BY 1)
+     
+, transactions AS (
+     SELECT 
+          fullvisitorid, 
+          COUNT(DISTINCT hits.transaction.transactionId) AS transactions
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
+     UNNEST(ga.hits) AS hits 
+     WHERE  hits.transaction.transactionId IS NOT NULL
+     GROUP BY 1
+)
+
+SELECT 
+     visits.fullvisitorid, 
+     visits.visits, transactions.transactions  
+FROM 
+     visits
+LEFT JOIN  
+     transactions #LEFT OUTER JOIN #jointure la 1ère table
+     USING (fullvisitorid)
 
 WITH visits AS (
-SELECT fullvisitorid, SUM(totals.visits) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-GROUP BY fullvisitorid),
-transactions AS (
-SELECT fullvisitorid, COUNT(DISTINCT hits.transaction.transactionId) AS transactions
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
-UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
-GROUP BY fullvisitorid)
-SELECT visits.fullvisitorid, visits.visits, transactions.transactions  FROM visits
-RIGHT JOIN  transactions #RIGHT OUTER JOIN #jointure sur la 2ème table
+     SELECT 
+          fullvisitorid, 
+          SUM(totals.visits) AS visits
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
+     GROUP BY 1
+)
+     
+, transactions AS (
+     SELECT 
+          fullvisitorid, 
+          COUNT(DISTINCT hits.transaction.transactionId) AS transactions
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
+     UNNEST(ga.hits) AS hits 
+     WHERE hits.transaction.transactionId IS NOT NULL
+     GROUP BY 1
+)
+     
+SELECT 
+     visits.fullvisitorid, 
+     visits.visits, transactions.transactions  
+FROM 
+     visits
+RIGHT JOIN  
+     transactions #RIGHT OUTER JOIN #jointure sur la 2ème table
 USING (fullvisitorid) 
 
 WITH visits AS (
-SELECT fullvisitorid, SUM(totals.visits) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-GROUP BY fullvisitorid),
-transactions AS (
-SELECT fullvisitorid, COUNT(DISTINCT hits.transaction.transactionId) AS transactions
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
-UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
-GROUP BY fullvisitorid)
-SELECT visits.fullvisitorid, visits.visits, transactions.transactions  FROM visits
-FULL JOIN  transactions #FULL OUTER JOIN #jointure complete sur les 2 tables
-USING (fullvisitorid)
+     SELECT 
+          fullvisitorid, 
+          SUM(totals.visits) AS visits
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
+     GROUP BY 1)
+     
+, transactions AS (
+     SELECT 
+          fullvisitorid, 
+          COUNT(DISTINCT hits.transaction.transactionId) AS transactions
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`AS ga, 
+     UNNEST(ga.hits) AS hits WHERE  hits.transaction.transactionId IS NOT NULL
+     GROUP BY 1)
 
-WITH 
-visitors AS (SELECT DISTINCT fullvisitorid FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`),
-products AS (SELECT DISTINCT hp.v2ProductName AS product FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
-             AS ga, UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp )
+SELECT 
+     visits.fullvisitorid, 
+     visits.visits, 
+     transactions.transactions  
+FROM
+     visits
+FULL JOIN 
+     transactions #FULL OUTER JOIN #jointure complete sur les 2 tables
+     USING (fullvisitorid)
 
-SELECT fullvisitorid, product FROM visitors CROSS JOIN products #FROM visitors, products #developpement factoriel
+WITH visitors AS (
+     SELECT 
+          DISTINCT fullvisitorid 
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`)
+          
+, products AS (
+     SELECT 
+          DISTINCT hp.v2ProductName AS product 
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS ga, 
+     UNNEST(ga.hits) AS hits, 
+     UNNEST(hits.product) AS hp 
+)
+
+SELECT 
+     fullvisitorid, 
+     product 
+FROM 
+     visitors 
+CROSS JOIN products #FROM visitors, products #developpement factoriel
 
 ###################################################### STRING ##########################################################
 
