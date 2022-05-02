@@ -5,115 +5,218 @@
 
 ##################################################### SELECT ############################################################
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory, 10 AS dix,
-CASE WHEN device.deviceCategory = "desktop" THEN 1 
-     WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory, 
+     10 AS dix,
+     CASE 
+          WHEN device.deviceCategory = "desktop" THEN 1 
+          WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
 ##################################################### WHERE #############################################################
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 WHERE device.deviceCategory = "desktop" #egale
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 WHERE device.deviceCategory <> "desktop" #different
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 WHERE device.deviceCategory != "desktop" #different
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 WHERE device.deviceCategory IN ("mobile", "tablet") #parmis
 
-SELECT DISTINCT fullvisitorid, device.deviceCategory
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
-WHERE (device.deviceCategory LIKE "le%" OR device.deviceCategory LIKE "%le" 
-OR device.deviceCategory LIKE "%le%") AND device.deviceCategory NOT LIKE "d%k"
-#commence par ... ou fini par ... ou contient ... et ne commence et fini par ...&...
+SELECT 
+     DISTINCT fullvisitorid, 
+     device.deviceCategory
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
+WHERE 
+     (device.deviceCategory LIKE "le%" 
+          OR device.deviceCategory LIKE "%le" 
+          OR device.deviceCategory LIKE "%le%") 
+      AND device.deviceCategory NOT LIKE "d%k" #commence par ... ou fini par ... ou contient ... et ne commence et fini par ...&...
 
-SELECT DISTINCT fullvisitorid, date
+SELECT 
+     DISTINCT fullvisitorid, 
+     date
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
+WHERE _TABLE_SUFFIX > '20161201' 
+ORDER BY 2 #superieur à
+
+SELECT 
+     DISTINCT fullvisitorid, 
+     date
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
+WHERE _TABLE_SUFFIX >= '20161201' 
+ORDER BY 2 #superieur ou egal à
+
+SELECT 
+     DISTINCT fullvisitorid, 
+     date
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
+WHERE _TABLE_SUFFIX < '20161201' 
+ORDER BY 2 DESC #inferieur à
+
+SELECT 
+     DISTINCT fullvisitorid, 
+     date
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
+WHERE _TABLE_SUFFIX <= '20161201' 
+ORDER BY 2 
+DESC #inferieur ou egal à
+
+SELECT 
+     DISTINCT fullvisitorid, 
+     date
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX > '20161201' ORDER BY date #superieur à
+WHERE _TABLE_SUFFIX BETWEEN '20161201' AND '20161231' 
+ORDER BY 2 #entre
 
-SELECT DISTINCT fullvisitorid, date
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX >= '20161201' ORDER BY date #superieur ou egal à
-
-SELECT DISTINCT fullvisitorid, date
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX < '20161201' ORDER BY date DESC #inferieur à
-
-SELECT DISTINCT fullvisitorid, date
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX <= '20161201' ORDER BY date DESC #inferieur ou egal à
-
-SELECT DISTINCT fullvisitorid, date
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX BETWEEN '20161201' AND '20161231' ORDER BY date #entre
-
-SELECT DISTINCT fullvisitorid
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga, 
-UNNEST(ga.hits) AS hits 
+SELECT 
+     DISTINCT fullvisitorid
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga, 
+     UNNEST(ga.hits) AS hits 
 WHERE hits.transaction.transactionId IS NULL #est vide
 
-SELECT DISTINCT fullvisitorid
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga, 
-UNNEST(ga.hits) AS hits 
+SELECT 
+     DISTINCT fullvisitorid
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201`AS ga, 
+     UNNEST(ga.hits) AS hits 
 WHERE hits.transaction.transactionId IS NOT NULL #est non vide
 
 ###################################################### GROUP BY ########################################################
 
-SELECT fullvisitorid, 
-SUM(totals.visits) #somme
-ROUND(AVG(totals.visits),2) #moyenne arrondie
-COUNT(DISTINCT device.deviceCategory) #compte
-MIN(date), #minimum
-MAX(date), #maximum
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
-GROUP BY fullvisitorid
+SELECT 
+     fullvisitorid, 
+     SUM(totals.visits) #somme
+     ROUND(AVG(totals.visits),2) #moyenne arrondie
+     COUNT(DISTINCT device.deviceCategory) #compte
+     MIN(date), #minimum
+     MAX(date), #maximum
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
+GROUP BY 1
 
 ###################################################### HAVING ##########################################################
 
-SELECT fullvisitorid, SUM(totals.visits) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
-GROUP BY fullvisitorid
+SELECT 
+     fullvisitorid, 
+     SUM(totals.visits) AS visits
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
+GROUP BY 1
 HAVING SUM(totals.visits) >= 2
-ORDER BY visits DESC
+ORDER BY 2 DESC
 
 ################################################### ARRAY & UNNEST #####################################################
 
-SELECT fullvisitorid,ARRAY_AGG(DISTINCT hp.v2ProductName) 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
-UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp 
-WHERE hits.transaction.transactionId IS NOT NULL GROUP BY fullvisitorid
+SELECT 
+     fullvisitorid,
+     ARRAY_AGG(DISTINCT hp.v2ProductName) 
+FROM 
+     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
+     UNNEST(ga.hits) AS hits, 
+     UNNEST(hits.product) AS hp 
+WHERE hits.transaction.transactionId IS NOT NULL 
+GROUP BY 1
+
+WITH array_table AS (
+    SELECT 
+        fullvisitorid,
+        ARRAY_AGG(DISTINCT hp.v2ProductName) AS products
+    FROM 
+        `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
+        UNNEST(ga.hits) AS hits, 
+        UNNEST(hits.product) AS hp 
+    WHERE hits.transaction.transactionId IS NOT NULL 
+    GROUP BY 1
+)
+
+SELECT 
+    fullvisitorid,
+    products_sold,
+FROM
+    array_table
+CROSS JOIN UNNEST(array_table.products) AS products_sold
 
 ###################################################### OVER #############################################################
 
 WITH products AS (
-SELECT fullvisitorid,COUNT(DISTINCT hp.v2ProductName) AS products 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
-UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp GROUP BY fullvisitorid ),
-classe AS (
-SELECT fullvisitorid, products.products, NTILE(2) OVER (ORDER BY products.products DESC) AS classe
-FROM products ORDER BY products DESC )
-SELECT MAX(products) AS median_poduct FROM classe WHERE classe.classe = 2
+     SELECT
+          fullvisitorid,
+          COUNT(DISTINCT hp.v2ProductName) AS products 
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
+          UNNEST(ga.hits) AS hits, 
+          UNNEST(hits.product) AS hp 
+     GROUP BY 1 )
+     
+, classe AS (
+     SELECT 
+          fullvisitorid, 
+          products.products, 
+          NTILE(2) OVER (ORDER BY products.products DESC) AS classe
+     FROM 
+          products 
+     ORDER BY 2 DESC)
+
+SELECT 
+     MAX(products) AS median_poduct 
+FROM 
+     classe 
+WHERE classe.classe = 2
 
 WITH products AS (
-SELECT  hp.v2ProductName, geoNetwork.continent, COUNT(DISTINCT fullvisitorid) AS visits
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
-UNNEST(ga.hits) AS hits, UNNEST(hits.product) AS hp GROUP BY hp.v2ProductName, geoNetwork.continent)
-SELECT v2ProductName,continent, visits, 
-SUM(visits) OVER(PARTITION BY v2ProductName), 
-SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING),
-SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 
-SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING), 
-SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
-ROW_NUMBER() OVER(PARTITION BY v2ProductName),
-RANK() OVER(PARTITION BY v2ProductName ORDER BY visits DESC)
-FROM products ORDER BY v2ProductName, visits DESC 
+     SELECT  
+          hp.v2ProductName, 
+          geoNetwork.continent, 
+          COUNT(DISTINCT fullvisitorid) AS visits
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
+          UNNEST(ga.hits) AS hits, 
+          UNNEST(hits.product) AS hp 
+     GROUP BY 1, 2)
+
+SELECT 
+     v2ProductName,
+     continent, 
+     visits, 
+     SUM(visits) OVER(PARTITION BY v2ProductName), 
+     SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING),
+     SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 
+     SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING), 
+     SUM(visits) OVER(PARTITION BY v2ProductName ORDER BY visits DESC ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
+     ROW_NUMBER() OVER(PARTITION BY v2ProductName),
+     RANK() OVER(PARTITION BY v2ProductName ORDER BY visits DESC)
+FROM 
+     products 
+ORDER BY 1, 3 DESC 
 
 ##################################################### UNION ############################################################
 
