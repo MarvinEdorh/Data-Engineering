@@ -136,28 +136,27 @@ ORDER BY 2 DESC
 
 ################################################### ARRAY & UNNEST #####################################################
 
-SELECT 
-     fullvisitorid,
-     ARRAY_AGG(DISTINCT hp.v2ProductName) 
-FROM 
-     `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
-     UNNEST(ga.hits) AS hits, 
-     UNNEST(hits.product) AS hp 
-WHERE hits.transaction.transactionId IS NOT NULL 
-GROUP BY 1
-
-WITH array_table AS (
+WITH transactions AS (
     SELECT 
-        fullvisitorid,
-        ARRAY_AGG(DISTINCT hp.v2ProductName) AS products
+        DISTINCT fullvisitorid,
+        hp.v2ProductName AS products
     FROM 
         `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` AS ga, 
         UNNEST(ga.hits) AS hits, 
         UNNEST(hits.product) AS hp 
-    WHERE hits.transaction.transactionId IS NOT NULL 
-    GROUP BY 1
+    WHERE 
+          hits.transaction.transactionId IS NOT NULL 
+          AND hp.v2ProductName like "%/%"
 )
 
+, array_table AS (
+     SELECT 
+          fullvisitorid,
+          SPLIT(products,'/') AS products
+     FROM
+          transactions
+)
+    
 SELECT 
     fullvisitorid,
     products_sold,
