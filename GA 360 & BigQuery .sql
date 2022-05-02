@@ -9,9 +9,6 @@ SELECT
      DISTINCT fullvisitorid, 
      device.deviceCategory, 
      10 AS dix,
-     CASE 
-          WHEN device.deviceCategory = "desktop" THEN 1 
-          WHEN device.deviceCategory = "tablet" THEN 2 ELSE 3 END
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
@@ -133,6 +130,55 @@ FROM
 GROUP BY 1
 HAVING SUM(totals.visits) >= 2
 ORDER BY 2 DESC
+
+###################################################### CASE WHEN ##########################################################
+
+WITH transactions AS (
+    SELECT 
+        hp.v2ProductName AS products,
+        device.deviceCategory
+    FROM 
+        `bigquery-public-data.google_analytics_sample.ga_sessions_*` AS ga, 
+        UNNEST(ga.hits) AS hits, 
+        UNNEST(hits.product) AS hp 
+    WHERE 
+          hits.transaction.transactionId IS NOT NULL 
+)
+
+SELECT
+    products,
+    CASE 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) > 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) = 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) = 0  THEN "mobile" 
+       WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) = 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) > 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) = 0  THEN "tablet" 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) = 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) = 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) > 0  THEN "desktop" 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) > 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) > 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) = 0  THEN "mobile & tablet" 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) > 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) = 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) > 0  THEN "mobile & desktop" 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) = 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) > 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) > 0  THEN "tablet & desktop" 
+        WHEN
+            SUM(CASE WHEN deviceCategory = "mobile" THEN 1 ELSE 0 END) > 0 
+            AND SUM(CASE WHEN deviceCategory = "tablet" THEN 1 ELSE 0 END) > 0  
+            AND SUM(CASE WHEN deviceCategory = "desktop" THEN 1 ELSE 0 END) > 0  THEN "mobile & tablet & desktop" END AS device
+FROM 
+    transactions
+GROUP BY 1
 
 ################################################### ARRAY & UNNEST #####################################################
 
@@ -602,4 +648,5 @@ SELECT
     DATE_ADD(CURRENT_DATE(), INTERVAL delta DAY) AS un_ans
 FROM 
   UNNEST(GENERATE_ARRAY(0,365)) AS delta
-  
+
+
