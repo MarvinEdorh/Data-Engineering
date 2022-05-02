@@ -265,9 +265,9 @@ WITH visits AS (
      SELECT 
           fullvisitorid, 
           SUM(totals.visits) AS visits
-FROM 
-     `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-GROUP BY 1
+     FROM 
+          `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
+     GROUP BY 1
 )
 
 , transactions AS (
@@ -296,7 +296,8 @@ WITH visits AS (
           SUM(totals.visits) AS visits
      FROM 
           `bigquery-public-data.google_analytics_sample.ga_sessions_2016*`
-     GROUP BY 1)
+     GROUP BY 1
+)
      
 , transactions AS (
      SELECT 
