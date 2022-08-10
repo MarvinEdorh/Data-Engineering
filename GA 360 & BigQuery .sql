@@ -3,22 +3,25 @@
 #Google Analytics 360 : https://support.google.com/analytics/answer/3437719?hl=fr
 
 ##################################################### SELECT ############################################################
-
+ 
+ -- selectionner des donnée GA360
 SELECT 
-     DISTINCT fullvisitorid, 
-     device.deviceCategory, 
-     10 AS dix,
+     DISTINCT fullvisitorid,  -- users
+     device.deviceCategory, -- catégorie d'appareil (mobile, tablet, desktop)
+     10 AS dix,  -- déclaration de la dimension "dix" (chaque ligne de la vue aura pour valeur numérique "10"
+     CAST(10 AS STRING) AS dix, -- déclaration de la dimension "dix" (chaque ligne de la vue aura pour valeur catégorielle "10", CAST converti au fromat string)
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 
 ##################################################### WHERE #############################################################
 
+-- conditionner les donnée voulues avec la clause where
 SELECT 
-     DISTINCT fullvisitorid, 
+     DISTINCT fullvisitorid, -- utilisateur sur desktop
      device.deviceCategory
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
-WHERE device.deviceCategory = "desktop" #egale
+WHERE device.deviceCategory = "desktop" #egale 
 
 SELECT 
      DISTINCT fullvisitorid, 
@@ -39,7 +42,7 @@ SELECT
      device.deviceCategory
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
-WHERE device.deviceCategory IN ("mobile", "tablet") #parmis
+WHERE device.deviceCategory IN ("mobile", "tablet") #parmis -- on peut egalement mettre une sous requete qui renvoie une vue à une dimension (une table à une colonne)
 
 SELECT 
      DISTINCT fullvisitorid, 
@@ -47,10 +50,10 @@ SELECT
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_20161201` 
 WHERE 
-     (device.deviceCategory LIKE "le%" 
-          OR device.deviceCategory LIKE "%le" 
-          OR device.deviceCategory LIKE "%le%") 
-      AND device.deviceCategory NOT LIKE "d%k" #commence par ... ou fini par ... ou contient ... et ne commence et fini par ...&...
+     (device.deviceCategory LIKE "le%" --commence par "le"
+          OR device.deviceCategory LIKE "%le" --finit par "le"
+          OR device.deviceCategory LIKE "%le%") --contient "le"
+      AND device.deviceCategory NOT LIKE "d%k"  --ne commence pas par "d" et finit par pas "k"
 
 SELECT 
      DISTINCT fullvisitorid, 
@@ -58,7 +61,7 @@ SELECT
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
 WHERE _TABLE_SUFFIX > '20161201' 
-ORDER BY 2 #superieur à
+ORDER BY 2 # date superieur à '20161201' (apres)
 
 SELECT 
      DISTINCT fullvisitorid, 
@@ -73,7 +76,7 @@ SELECT
      date
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX < '20161201' 
+WHERE _TABLE_SUFFIX < '20161201' -- (date avant)
 ORDER BY 2 DESC #inferieur à
 
 SELECT 
@@ -89,7 +92,7 @@ SELECT
      DISTINCT fullvisitorid, 
      date
 FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*` 
-WHERE _TABLE_SUFFIX BETWEEN '20161201' AND '20161231' 
+WHERE _TABLE_SUFFIX BETWEEN '20161201' AND '20161231' -- (date entre)
 ORDER BY 2 #entre
 
 SELECT 
@@ -108,16 +111,19 @@ WHERE hits.transaction.transactionId IS NOT NULL #est non vide
 
 ###################################################### GROUP BY ########################################################
 
+-- group by permet d'aggreger des fonctionn sur des dimensions 
 SELECT 
      fullvisitorid, 
      SUM(totals.visits) #somme
      ROUND(AVG(totals.visits),2) #moyenne arrondie
-     COUNT(DISTINCT device.deviceCategory) #compte
+     COUNT(DISTINCT device.deviceCategory) #compte distinct
      MIN(date), #minimum
      MAX(date), #maximum
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
-GROUP BY 1
+GROUP BY 1 -- 1 fait référence à la première dimension (fullvisitorid)
+-- convention d'ecriture : on ecrit d'abbord les dimension puis les fonctions, 
+-- ex : SELECT fullvisitorid, hits.transaction.transactionId, sum(...), FROM ... GROUP BY 1, 2
 
 ###################################################### HAVING ##########################################################
 
@@ -127,12 +133,14 @@ SELECT
 FROM 
      `bigquery-public-data.google_analytics_sample.ga_sessions_201612*` 
 GROUP BY 1
-HAVING SUM(totals.visits) >= 2
+HAVING SUM(totals.visits) >= 2 -- un peu comme WHERE mais sur les fonctions aggrégées
 ORDER BY 2 DESC
 
 ###################################################### CASE WHEN ##########################################################
 
-WITH transactions AS (
+-- permet de creer des dimensions conditionelles
+
+WITH transactions AS ( -- WITH permet de creer une CTE (une sous table)
     SELECT 
         hp.v2ProductName AS products,
         device.deviceCategory
@@ -144,7 +152,7 @@ WITH transactions AS (
           hits.transaction.transactionId IS NOT NULL 
 )
 
-SELECT
+SELECT -- à partir de la table transactions on crée la dimension device sur des conditions sur la dimensions deviceCategory
     products,
     CASE 
         WHEN
@@ -181,7 +189,9 @@ GROUP BY 1
 
 ################################################### ARRAY & UNNEST #####################################################
 
-WITH transactions AS (
+-- compliquer pour débutant :(
+
+WITH transactions AS ( 
     SELECT 
         DISTINCT fullvisitorid,
         hp.v2ProductName AS products
@@ -210,6 +220,8 @@ FROM
 CROSS JOIN UNNEST(array_table.products) AS products_sold
 
 ###################################################### OVER #############################################################
+
+-- compliquer pour débutant :(
 
 WITH products AS (
      SELECT
@@ -305,7 +317,12 @@ FROM
 
 ###################################################### JOIN #############################################################
 
-WITH visits AS (
+-- joindre des tables
+-- très important 
+
+################################################ INNER
+
+WITH visits AS ( -- table sessions
      SELECT 
           fullvisitorid, 
           SUM(totals.visits) AS visits
@@ -314,7 +331,7 @@ WITH visits AS (
      GROUP BY 1
 )
 
-, transactions AS (
+, transactions AS ( -- table transactions
      SELECT 
           fullvisitorid, 
           COUNT(DISTINCT hits.transaction.transactionId) AS transactions
@@ -327,12 +344,15 @@ WITH visits AS (
      
 SELECT 
      visits.fullvisitorid, 
-     visits.visits, transactions.transactions  
+     visits.visits, 
+     transactions.transactions  
 FROM 
      visits
 INNER JOIN  
-     transactions #jointure unique sur les 2 tables
+     transactions -- jointure unique sur les 2 tables (donnée communes aux de tables)
      ON visits.fullvisitorid = transactions.fullvisitorid
+
+########################################################### LEFT
 
 WITH visits AS (
      SELECT 
@@ -360,8 +380,11 @@ SELECT
 FROM 
      visits
 LEFT JOIN  
-     transactions #LEFT OUTER JOIN #jointure la 1ère table
+     transactions #LEFT OUTER JOIN #jointure la 1ère table -- on prend les premiere table et on colle la seconde sur la clé de joiture 'fullvisitorid'
      USING (fullvisitorid)
+WHERE transactions.fullvisitorid IS NULL -- Filtrer sur les données présentes sur la premiere table et absentes de la seconde
+     
+#########################################################  RIGHT
 
 WITH visits AS (
      SELECT 
@@ -389,8 +412,10 @@ SELECT
 FROM 
      visits
 RIGHT JOIN  
-     transactions #RIGHT OUTER JOIN #jointure sur la 2ème table
+     transactions #RIGHT OUTER JOIN #jointure sur la 2ème table -- données présentes sur la seconde table et absente de la premiere
 USING (fullvisitorid) 
+
+############################################################### FULL
 
 WITH visits AS (
      SELECT 
@@ -418,7 +443,7 @@ SELECT
 FROM
      visits
 FULL JOIN 
-     transactions #FULL OUTER JOIN #jointure complete sur les 2 tables
+     transactions #FULL OUTER JOIN #jointure complete sur les 2 tables -- donnée présentes sur les 2 tables
      USING (fullvisitorid)
 
 WITH visitors AS (
@@ -468,6 +493,7 @@ FROM
 
 #################################################### DATA & TIME ######################################################
 
+-- Manipuler des dates
 #DATE
 SELECT 
      CURRENT_DATE(), #2021-09-02,
@@ -480,7 +506,7 @@ SELECT
           WHEN EXTRACT(DAYOFWEEK FROM CURRENT_DATE()) = 6 THEN "5.Vendredi"
           WHEN EXTRACT(DAYOFWEEK FROM CURRENT_DATE()) = 7 THEN "6.Samedi" 
           WHEN EXTRACT(DAYOFWEEK FROM CURRENT_DATE()) = 1 THEN "7.Dimanche" END AS day_of_week,
-     EXTRACT(DAY FROM CURRENT_DATE()),
+     EXTRACT(DAY FROM CURRENT_DATE()), -- extraire jour 
      EXTRACT(DAYOFYEAR FROM CURRENT_DATE()),
      EXTRACT(WEEK  FROM CURRENT_DATE()), 
      #[0,53] commence le dimanche et les dates antérieures au premier dimanche de l'année correspondent à la semaine 0
@@ -490,12 +516,12 @@ SELECT
      EXTRACT(MONTH FROM CURRENT_DATE()),
      EXTRACT(QUARTER FROM CURRENT_DATE()), #[1,4]
      EXTRACT(YEAR FROM CURRENT_DATE()),
-     DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY),
+     DATE_ADD(CURRENT_DATE(), INTERVAL 1 DAY), -- ajouter une journée
      DATE_ADD(CURRENT_DATE(), INTERVAL 1 WEEK), # 1 WEEK = 7 DAY
      DATE_ADD(CURRENT_DATE(), INTERVAL 1 MONTH), 
      DATE_ADD(CURRENT_DATE(), INTERVAL 1 QUARTER), 
      DATE_ADD(CURRENT_DATE(), INTERVAL 1 YEAR),
-     DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY),
+     DATE_SUB(CURRENT_DATE(), INTERVAL 1 DAY), - soustraire des date
      DATE_SUB(CURRENT_DATE(), INTERVAL 1 WEEK), #1 WEEK = 7 DAY
      DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH),
      DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER),
