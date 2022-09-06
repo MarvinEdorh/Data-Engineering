@@ -656,32 +656,30 @@ FROM
   
 WITH transactions AS (
     SELECT 
-        users,
-        date,
-        id_transaction
+        user_pseudo_id,
+        PARSE_DATE("%Y%m%d", event_date) event_date,
+        ecommerce.transaction_id
     FROM
         `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
 )
 , time_cohortes AS (
     SELECT
-        users,
-        date,
-        id_transaction,
+        user_pseudo_id,
+        event_date,
+        transaction_id,
         DATE_ADD(DATE_TRUNC(CURRENT_DATE(), WEEK),INTERVAL - delta WEEK ) AS WEEK
     FROM 
         UNNEST(GENERATE_ARRAY(0,52,1)) AS delta, transactions -- delta : table 52 lignes 1 colonne
-    ORDER BY week,DATE_FAC
 )
 
 SELECT 
-  users,
+  user_pseudo_id,
   WEEK,
-  COUNT(DISTINCT id_transaction),
+  COUNT(DISTINCT transaction_id),
 FROM 
   time_cohortes
 WHERE  
-    date >= DATE_SUB(WEEK,INTERVAL 52 WEEK) -- Lissé sur 1 ans
-    AND date < WEEK
+    event_date >= DATE_SUB(WEEK,INTERVAL 52 WEEK) -- Lissé sur 1 ans
+    AND event_date < WEEK
 GROUP BY 1, 2
-ORDER BY 2--*/
-
+ORDER BY 2
