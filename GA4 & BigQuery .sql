@@ -173,83 +173,6 @@ FROM
     products
 GROUP BY 1
 
-################################################### ARRAY & UNNEST #####################################################
-
-WITH pages_location AS (
-    SELECT 
-        DISTINCT user_pseudo_id,
-        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = "page_location") AS page_location,
-    FROM 
-        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` 
-)
-
-, array_table AS (
-     SELECT 
-          user_pseudo_id,
-          SPLIT(page_location,'/') AS split_page_location
-     FROM
-          pages_location
-)
-    
-SELECT 
-    user_pseudo_id,
-    page_location,
-FROM
-    array_table
-CROSS JOIN UNNEST(array_table.split_page_location) AS page_location
-
-###################################################### OVER #############################################################
-
-WITH sessions AS (
-     SELECT
-          user_pseudo_id,
-          COUNT(DISTINCT CONCAT(user_pseudo_id,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = "ga_session_id"))) AS sessions
-     FROM 
-          `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
-     GROUP BY 1 
-)
-     
-, classe AS (
-     SELECT 
-          user_pseudo_id, 
-          sessions.sessions, 
-          NTILE(2) OVER (ORDER BY sessions.sessions DESC) AS classe
-     FROM 
-          sessions 
-     ORDER BY 2 DESC
-)
-
-SELECT 
-     MAX(sessions) AS sessions_poduct 
-FROM 
-     classe 
-WHERE classe.classe = 2
-
-WITH events AS (
-     SELECT  
-          event_name, 
-          device.category, 
-          COUNT(DISTINCT CONCAT(user_pseudo_id,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = "ga_session_id"))) AS visits
-     FROM 
-          `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` 
-     GROUP BY 1, 2
-)
-
-SELECT 
-     event_name,
-     category, 
-     visits, 
-     SUM(visits) OVER(PARTITION BY event_name), 
-     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING),
-     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 
-     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING), 
-     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
-     ROW_NUMBER() OVER(PARTITION BY event_name),
-     RANK() OVER(PARTITION BY event_name ORDER BY visits DESC)
-FROM 
-     events 
-ORDER BY 1, 3 DESC 
-
 ##################################################### UNION ############################################################
 
 #fusion
@@ -444,7 +367,10 @@ CROSS JOIN products #FROM visitors, products #developpement factoriel
 ###################################################### STRING ##########################################################
 
 SELECT 
-     DISTINCT CONCAT("ID",user_pseudo_id) AS user_pseudo_id, 
+     DISTINCT 
+     CAST(P.CIP13 AS STRING),
+     CONCAT("ID",user_pseudo_id) AS user_pseudo_id, 
+     'BALI'||EXTRACT(YEAR from CURRENT_DATE())||EXTRACT(MONTH from CURRENT_DATE())||EXTRACT(DAY from CURRENT_DATE())||GENERATE_UUID() as PK_LIGNE,
      device.category,
      LENGTH(device.category), #nombre de caractère
      LEFT(device.category,1), #x caratères depuis la gauche
@@ -646,13 +572,92 @@ SELECT
      TIMESTAMP_SECONDS(visitStartTime),
      TIMESTAMP_MILLIS(1230219000000),
      TIMESTAMP_MICROS(1230219000000000),
- 
- #GENERATE DATE
+     
+###################################################### OVER #############################################################
+
+WITH sessions AS (
+     SELECT
+          user_pseudo_id,
+          COUNT(DISTINCT CONCAT(user_pseudo_id,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = "ga_session_id"))) AS sessions
+     FROM 
+          `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+     GROUP BY 1 
+)
+     
+, classe AS (
+     SELECT 
+          user_pseudo_id, 
+          sessions.sessions, 
+          NTILE(2) OVER (ORDER BY sessions.sessions DESC) AS classe
+     FROM 
+          sessions 
+     ORDER BY 2 DESC
+)
+
+SELECT 
+     MAX(sessions) AS sessions_poduct 
+FROM 
+     classe 
+WHERE classe.classe = 2
+
+WITH events AS (
+     SELECT  
+          event_name, 
+          device.category, 
+          COUNT(DISTINCT CONCAT(user_pseudo_id,(SELECT value.int_value FROM UNNEST(event_params) WHERE key = "ga_session_id"))) AS visits
+     FROM 
+          `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` 
+     GROUP BY 1, 2
+)
+
+SELECT 
+     event_name,
+     category, 
+     visits, 
+     SUM(visits) OVER(PARTITION BY event_name), 
+     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING),
+     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW), 
+     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN CURRENT ROW AND 2 FOLLOWING), 
+     SUM(visits) OVER(PARTITION BY event_name ORDER BY visits DESC ROWS BETWEEN 2 PRECEDING AND CURRENT ROW),
+     ROW_NUMBER() OVER(PARTITION BY event_name),
+     RANK() OVER(PARTITION BY event_name ORDER BY visits DESC)
+FROM 
+     events 
+ORDER BY 1, 3 DESC 
+     
+ ################################################### ARRAY & UNNEST #####################################################
+
+WITH pages_location AS (
+    SELECT 
+        DISTINCT user_pseudo_id,
+        (SELECT value.string_value FROM UNNEST(event_params) WHERE key = "page_location") AS page_location,
+    FROM 
+        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` 
+)
+
+, array_table AS (
+     SELECT 
+          user_pseudo_id,
+          SPLIT(page_location,'/') AS split_page_location
+     FROM
+          pages_location
+)
+    
+SELECT 
+    user_pseudo_id,
+    page_location,
+FROM
+    array_table
+CROSS JOIN UNNEST(array_table.split_page_location) AS page_location
+
+################################################### GENERATE_ARRAY  ####################################################################
  
 SELECT 
     DATE_ADD(CURRENT_DATE(), INTERVAL delta DAY) AS un_ans
 FROM 
   UNNEST(GENERATE_ARRAY(0,365)) AS delta
+  
+ #COHORTS ANALYSIS
   
 WITH transactions AS (
     SELECT 
