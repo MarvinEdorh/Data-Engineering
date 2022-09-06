@@ -648,7 +648,40 @@ SELECT
      TIMESTAMP_MICROS(1230219000000000),
  
  #GENERATE DATE
+ 
 SELECT 
     DATE_ADD(CURRENT_DATE(), INTERVAL delta DAY) AS un_ans
 FROM 
   UNNEST(GENERATE_ARRAY(0,365)) AS delta
+  
+WITH transactions AS (
+    SELECT 
+        users,
+        date,
+        id_transaction
+    FROM
+        `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`
+)
+, time_cohortes AS (
+    SELECT
+        users,
+        date,
+        id_transaction,
+        DATE_ADD(DATE_TRUNC(CURRENT_DATE(), WEEK),INTERVAL - delta WEEK ) AS WEEK
+    FROM 
+        UNNEST(GENERATE_ARRAY(0,52,1)) AS delta, transactions -- delta : table 52 lignes 1 colonne
+    ORDER BY week,DATE_FAC
+)
+
+SELECT 
+  users,
+  WEEK,
+  COUNT(DISTINCT id_transaction),
+FROM 
+  time_cohortes
+WHERE  
+    date >= DATE_SUB(WEEK,INTERVAL 52 WEEK) -- Lissé sur 1 ans
+    AND date < WEEK
+GROUP BY 1, 2
+ORDER BY 2--*/
+
