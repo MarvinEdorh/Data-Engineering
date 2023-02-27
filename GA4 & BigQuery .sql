@@ -131,7 +131,7 @@ ORDER BY 2 DESC
 
 WITH products AS (
     SELECT 
-        items.item_name  AS product 
+        items.item_name  AS product,
         device.category,
      FROM 
           `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*` AS ga, 
